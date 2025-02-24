@@ -1673,10 +1673,6 @@ async def register_account(
     email: str = Form(..., alias="user[user_email]"),
     pw_plaintext: str = Form(..., alias="user[password]"),
     check: int = Form(...),
-    # XXX: require/validate these headers; they are used later
-    # on in the registration process for resolving geolocation
-    forwarded_ip: str = Header(..., alias="X-Forwarded-For"),
-    real_ip: str = Header(..., alias="X-Real-IP"),
 ) -> Response:
     if not all((username, email, pw_plaintext)):
         return Response(
