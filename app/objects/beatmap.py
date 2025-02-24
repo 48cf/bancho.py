@@ -530,8 +530,9 @@ class Beatmap:
         # if a map is 'frozen', we keep its status
         # even after an update from the osu!api.
         if not getattr(self, "frozen", False):
-            osuapi_status = int(osuapi_resp["approved"])
-            self.status = RankedStatus.from_osuapi(osuapi_status)
+            # osuapi_status = int(osuapi_resp["approved"])
+            # self.status = RankedStatus.from_osuapi(osuapi_status)
+            self.status = RankedStatus.Ranked
 
         self.mode = GameMode(int(osuapi_resp["mode"]))
 
@@ -690,9 +691,10 @@ class BeatmapSet:
                     map_md5s_to_delete.add(old_map.md5)
                 else:
                     new_map = new_maps[old_id]
-                    new_ranked_status = RankedStatus.from_osuapi(
-                        int(new_map["approved"]),
-                    )
+                    # new_ranked_status = RankedStatus.from_osuapi(
+                    #     int(new_map["approved"]),
+                    # )
+                    new_ranked_status = RankedStatus.Ranked
                     if (
                         old_map.md5 != new_map["file_md5"]
                         or old_map.status != new_ranked_status
