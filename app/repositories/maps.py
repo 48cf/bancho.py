@@ -248,6 +248,7 @@ async def fetch_many(
     artist: str | None = None,
     creator: str | None = None,
     filename: str | None = None,
+    map_md5: str | None = None,
     mode: int | None = None,
     frozen: bool | None = None,
     page: int | None = None,
@@ -267,6 +268,8 @@ async def fetch_many(
         select_stmt = select_stmt.where(MapsTable.creator == creator)
     if filename is not None:
         select_stmt = select_stmt.where(MapsTable.filename == filename)
+    if map_md5 is not None:
+        select_stmt = select_stmt.where(MapsTable.md5 == map_md5)
     if mode is not None:
         select_stmt = select_stmt.where(MapsTable.mode == mode)
     if frozen is not None:
