@@ -475,3 +475,7 @@ create index users_country_index
 # v5.2.2
 create index scores_fetch_leaderboard_generic_index
 	on scores (map_md5, status, mode);
+
+# v5.2.3
+alter table users add chibisafe_api_key varchar(64) default null;
+alter table users add chibisafe_ss_album_uuid varchar(36) default null;
