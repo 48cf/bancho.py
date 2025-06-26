@@ -225,6 +225,8 @@ class Players(list[Player]):
             silence_end=player["silence_end"],
             donor_end=player["donor_end"],
             api_key=player["api_key"],
+            chibisafe_api_key=player["chibisafe_api_key"],
+            chibisafe_ss_album_uuid=player["chibisafe_ss_album_uuid"],
         )
 
     async def from_cache_or_sql(

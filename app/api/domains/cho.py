@@ -867,6 +867,8 @@ async def handle_osu_login_request(
         login_time=login_time,
         is_tourney_client=osu_version.stream == "tourney",
         api_key=user_info["api_key"],
+        chibisafe_api_key=user_info["chibisafe_api_key"],
+        chibisafe_ss_album_uuid=user_info["chibisafe_ss_album_uuid"],
     )
 
     data = bytearray(app.packets.protocol_version(19))

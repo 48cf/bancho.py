@@ -226,6 +226,8 @@ class Player:
         is_bot_client: bool = False,
         is_tourney_client: bool = False,
         api_key: str | None = None,
+        chibisafe_api_key: str | None = None,
+        chibisafe_ss_album_uuid: str | None = None,
     ) -> None:
         if geoloc is None:
             geoloc = {
@@ -252,6 +254,8 @@ class Player:
         self.is_bot_client = is_bot_client
         self.is_tourney_client = is_tourney_client
         self.api_key = api_key
+        self.chibisafe_api_key = chibisafe_api_key
+        self.chibisafe_ss_album_uuid = chibisafe_ss_album_uuid
 
         # avoid enqueuing packets to bot accounts.
         if self.is_bot_client:
@@ -970,6 +974,12 @@ class Player:
                     Grade.A: row["a_count"],
                 },
             )
+
+    async def update_chibisafe_album_uuid(self) -> None:
+        await users_repo.partial_update(
+            id=self.id,
+            chibisafe_ss_album_uuid=self.chibisafe_ss_album_uuid,
+        )
 
     def update_latest_activity_soon(self) -> None:
         """Update the player's latest activity in the database."""

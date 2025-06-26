@@ -161,8 +161,52 @@ async def osuScreenshot(
         with ss_file.open("wb") as f:
             f.write(screenshot_view)
 
-    log(f"{player} uploaded {filename}.")
-    return Response(filename.encode())
+        log(f"{player} uploaded {filename}.")
+
+    if player.chibisafe_api_key:
+        if not player.chibisafe_ss_album_uuid:
+            response = await app.state.services.http_client.post(
+                app.settings.CHIBISAFE_API_ENDPOINT + "/album/create",
+                headers={"x-api-key": player.chibisafe_api_key},
+                json={"name": "osu! screenshots"})
+            response_data = response.json()
+
+            if response.status_code != 200 or "statusCode" in response_data:
+                error = response_data["error"]
+                message = response_data["message"]
+                log(f"Failed to create chibisafe album: error={error} message={message}")
+                return Response(
+                    content=b"Internal server error",
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+
+            player.chibisafe_ss_album_uuid = response_data["album"]["uuid"]
+            await player.update_chibisafe_album_uuid()
+            log(f"Created chibisafe album for {player}: {player.chibisafe_ss_album_uuid}")
+
+        album_uuid = player.chibisafe_ss_album_uuid
+        ss_file_obj = ss_file.open("rb")
+        response = await app.state.services.http_client.post(
+            app.settings.CHIBISAFE_API_ENDPOINT + "/upload",
+            headers={"x-api-key": player.chibisafe_api_key, "albumuuid": album_uuid},
+            files={"file": ss_file_obj})
+        response_data = response.json()
+
+        if response.status_code != 200 or "statusCode" in response_data:
+            error = response_data["error"]
+            message = response_data["message"]
+            log(f"Failed to upload screenshot to chibisafe: error={error} message={message}")
+            return Response(
+                content=b"Internal server error",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        log(f"{player} uploaded {filename} to chibisafe.")
+        url = response_data["url"]
+    else:
+        url = filename.encode()
+
+    return Response(url)
 
 
 @router.get("/web/osu-getfriends.php")
