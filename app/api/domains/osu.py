@@ -168,7 +168,7 @@ async def osuScreenshot(
             response = await app.state.services.http_client.post(
                 app.settings.CHIBISAFE_API_ENDPOINT + "/album/create",
                 headers={"x-api-key": player.chibisafe_api_key},
-                json={"name": "osu! screenshots"})
+                json={"name": "{player.name}'s osu! screenshots"})
             response_data = response.json()
 
             if response.status_code != 200 or "statusCode" in response_data:
