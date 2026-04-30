@@ -1132,7 +1132,7 @@ async def rmpriv(ctx: Context) -> str | None:
     return f"Updated {target}'s privileges."
 
 
-@command(Privileges.DEVELOPER, hidden=True)
+@command(Privileges.ADMINISTRATOR, hidden=True)
 async def givedonator(ctx: Context) -> str | None:
     """Give donator status to a specified player for a specified duration."""
     if len(ctx.args) < 2:
@@ -1162,7 +1162,7 @@ async def givedonator(ctx: Context) -> str | None:
     return f"Added {ctx.args[1]} of donator status to {target}."
 
 
-@command(Privileges.DEVELOPER)
+@command(Privileges.ADMINISTRATOR)
 async def wipemap(ctx: Context) -> str | None:
     # (intentionally no docstring)
     if ctx.args:
